@@ -4,6 +4,18 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 DAT158 Assingment-2: Project for creating an ai to generate adjective stories.
 
+## OpenAI API
+
+This project uses the [OpenAI API](https://beta.openai.com/docs/introduction) to generate text.
+
+## Environment Variables
+
+Add the following to a `.env.local` file in the root of the project:
+
+```dotenv
+OPENAI_API_KEY= # Your OpenAI API key
+```
+
 ## Getting Started
 
 First, run the development server:
