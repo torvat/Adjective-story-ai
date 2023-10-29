@@ -5,19 +5,19 @@ import { FormEvent, useState } from 'react'
 
 const systemMessage = `
 You are a professional writer.
-You should create an adjective history based on the given prompt.
+You should create an adjective story based on the given prompt.
 You should write at least one paragraph with adjectives missing in several sentences.
-Where there are missing adjectives, it should be denoted only using "_".
+Where there are missing adjectives, it should be denoted only using "_______".
 You should just give the answer without any other comments.
-When creating an adjective history, you should not use any number indicators like (x) next to the missing adjectives.
+You should not use any number indicators like (x) next to the missing adjectives.
 `
 
-type Result = { loading: true } | { loading: false; result: OpenAIResponse }
+type APIResult = { loading: true } | { loading: false; response: OpenAIResponse }
 
 const inputId = 'input'
 
 export default function Home() {
-    const [result, setResult] = useState<Result>()
+    const [result, setResult] = useState<APIResult>()
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault()
@@ -26,7 +26,7 @@ export default function Home() {
         const inputElement = document.getElementById(inputId) as HTMLInputElement
 
         const request: OpenAIRequest = {
-            model: 'gpt-4',
+            model: 'gpt-3.5-turbo',
             prompt: inputElement.value,
             system: systemMessage,
         }
@@ -36,7 +36,7 @@ export default function Home() {
             method: 'POST',
         })
         if (result.ok) {
-            setResult({ loading: false, result: await result.json() })
+            setResult({ loading: false, response: await result.json() })
         } else {
             setResult(undefined)
         }
@@ -49,7 +49,7 @@ export default function Home() {
                 <InputField id={inputId} required />
                 <button type={'submit'}>Generate</button>
             </form>
-            {result?.loading ? <p>Please wait</p> : <p>{result?.result.content}</p>}
+            {result?.loading ? <p>Please wait</p> : <p>{result?.response?.content}</p>}
         </main>
     )
 }
