@@ -22,7 +22,9 @@ export default function App() {
                 <div>
                     <InputField id='create' required={true} placeholder='Enter Query' />
                     <InputField id='length' required={false} placeholder='Enter Story Lenght' type='number' />
-                    <Button id='button-create' content='Create' onClick={() => displayOut()} />
+                    <Button id='button-create' onClick={() => displayOut()}>
+                        Create
+                    </Button>
                 </div>
                 <div className={outputStyle}>
                     {/*this component is not created yet*/}
