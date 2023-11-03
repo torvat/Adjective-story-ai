@@ -1,19 +1,19 @@
-'use client0'
+'use client'
 import React from 'react'
 
 interface ButtonProps {
-    content: string
+    children: React.ReactNode
     id: string
     onClick?: React.MouseEventHandler<HTMLButtonElement> | undefined
 }
 
-export default function Button({ content, id, onClick }: ButtonProps) {
+export default function Button({ children, id, onClick }: ButtonProps) {
     const style = 'outline outline-2 outline-cyan-500 bg-stone-400 rounded my-2 p-1'
 
     return (
         <div>
             <button id={id} onClick={onClick} className={style}>
-                {content}
+                {children}
             </button>
         </div>
     )
