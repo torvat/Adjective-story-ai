@@ -13,12 +13,21 @@ You should just give the answer without any other comments.
 You should not use any number indicators like (x) next to the missing adjectives.
 `
 
+const systemMessageAdjectives = `
+You should fill in the missing adjectives denoted by "_______" using the provided adjective list.
+You should return only the filled out story without any other comments.
+You should fill the first word in the first missing adjective spot, the second word in the second spot, and so on.
+You should not try to make the adjectives make sense.
+`
+
 type APIResult = { loading: true } | { loading: false; response: OpenAIResponse }
 
 const inputId = 'input'
 
 export default function Home() {
     const [result, setResult] = useState<APIResult>()
+    const [adjectives, setAdjectives] = useState<string[]>([]);
+    const [filledResult, setFilledResult] = useState<APIResult>()
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault()
@@ -42,6 +51,27 @@ export default function Home() {
             setResult(undefined)
         }
     }
+    async function handleAdjectives(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault()
+        setFilledResult({loading: true})
+
+        const request: OpenAIRequest = {
+            model: 'gpt-3.5-turbo',
+            prompt: 'Replace **all** the missing adjectives with the given words ' + adjectives.toString() + 'Mark the adjectives in bold. Previous respone: ' + (result as any)?.response?.content,
+            system: systemMessageAdjectives,
+        }
+
+        const resultFilled = await fetch('api', {
+            body: JSON.stringify(request),
+            method: 'POST',
+        })
+        if (resultFilled.ok) {
+            setFilledResult({loading: false, response: await resultFilled.json()})
+            setAdjectives([])
+        } else {
+            setFilledResult(undefined)
+        }
+    }
 
     return (
         <main className='flex flex-col items-center justify-between p-24'>
@@ -51,7 +81,12 @@ export default function Home() {
                 <button type={'submit'}>Generate</button>
             </form>
             {result?.loading ? <p>Please wait</p> : <p>{result?.response?.content}</p>}
-            <AdjectiveInput></AdjectiveInput>
+            <AdjectiveInput adjectives={adjectives} setAdjectives={setAdjectives}/>
+            <form onSubmit={handleAdjectives}>
+                <button type={'submit'}>Fill in</button>
+            </form>
+            {filledResult?.loading ? <p>Please wait, filling story...</p> : <p>{filledResult?.response?.content}</p>}
+
         </main>
     )
 }

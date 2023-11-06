@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-
-const AdjectiveInput: React.FC = () => {
+interface AdjectiveInputProps {
+    adjectives: string[];
+    setAdjectives: React.Dispatch<React.SetStateAction<string[]>>;
+}
+export default function AdjectiveInput({adjectives, setAdjectives}: AdjectiveInputProps){
 
     const [inputValue, setInputValue] = useState<string>('');
-    const [adjectives, setAdjectives] = useState<string[]>([]);
-
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputValue(event.target.value);
     };
@@ -26,7 +27,7 @@ const AdjectiveInput: React.FC = () => {
             <form onSubmit={handleSubmit}>
                 <h2>Enter adjectives separated by commas:</h2>
                 <input
-                    id="adjective-input"
+                    id="adjectives"
                     type="text"
                     value={inputValue}
                     onChange={handleInputChange}
@@ -37,7 +38,7 @@ const AdjectiveInput: React.FC = () => {
             {adjectives.length > 0 && (
                 <div>
                     <h3>Adjective list:</h3>
-                    <ul>
+                    <ul id="adjective-list">
                         {adjectives.map((adjective, index) => (
                             <li key={index}>{adjective}</li>
                         ))}
@@ -47,5 +48,3 @@ const AdjectiveInput: React.FC = () => {
         </div>
     );
 };
-
-export default AdjectiveInput;
