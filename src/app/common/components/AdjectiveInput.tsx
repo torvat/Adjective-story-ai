@@ -31,7 +31,7 @@ const AdjectiveInput: React.FC = () => {
                     value={inputValue}
                     onChange={handleInputChange}
                     placeholder="quick, lazy, playful"
-                />
+                /><br/>
                 <button type="submit">Submit</button>
             </form>
             {adjectives.length > 0 && (
