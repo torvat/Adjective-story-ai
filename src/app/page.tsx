@@ -1,8 +1,8 @@
 'use client'
 
 import InputField from '@/app/common/components/InputField'
-import { FormEvent, useState } from 'react'
 import AdjectiveInput from "@/app/common/components/AdjectiveInput";
+import { FormEvent, useState } from 'react'
 
 const systemMessage = `
 You are a professional writer.

@@ -6,4 +6,7 @@ interface OpenAIRequest {
     model?: GPTModel
 }
 
-interface OpenAIResponse {}
+interface OpenAIResponse {
+    role: 'system' | 'user' | 'assistant'
+    content: string
+}
