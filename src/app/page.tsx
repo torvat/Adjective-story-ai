@@ -20,9 +20,6 @@ const inputId = 'input'
 export default function Home() {
     const [result, setResult] = useState<APIResult>()
 
-    function handleAdjectives(){
-
-    }
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault()
         setResult({ loading: true })
