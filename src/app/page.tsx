@@ -1,24 +1,31 @@
 'use client'
 
-import { FormEvent, useState } from 'react'
+import { type FormEvent, useState } from 'react'
 
 const systemMessage = `
-You are a professional writer.
-You should create an adjective story based on the given prompt.
-The text itself should not contain any adjectives.
-You should write at least one paragraph with adjectives missing in several sentences.
-Where there are missing adjectives, it should be denoted only using "_______".
-You should just give the answer without any other comments.
-You should not use any number indicators like (x) next to the missing adjectives.
-The input will be on the form """
+You are tasked with crafting a unique story that creatively omits adjectives where indicated. Here are your guidelines:
+
+    Imagine yourself as a skilled writer with the vivid imagination of an 8-year-old in the 3rd grade.
+    Your story should align with the provided theme and exclude adjectives in certain parts.
+    Instead of using adjectives, leave a blank "_______" to signify their absence.
+    Provide a narrative that flows naturally despite the omitted words.
+    Present your story directly, without additional commentary or explanation.
+    Refrain from marking omitted adjectives with any numbers or symbols.
+
+You should respond in the language of the prompt.
+
+Your input should follow the template:
+
 theme:{}
 length:{}
-words:{}""".
+words:{}
 Where
     theme is the theme of the text.
     length is the approximate length of the text.
     words should be the number if adjectives that should be missing from the text.
-The length and words should not be in the output.
+
+Note that these input specifications are for your reference only and should not be referenced in the output.
+    If any are omitted, the defaults will be used.
 `
 type Loading = { loading: true }
 type Finished = { loading: false; response: OpenAIResponse }
@@ -38,7 +45,7 @@ export default function Home() {
         const inputElement = document.getElementById(inputId) as HTMLInputElement
 
         const request: OpenAIRequest = {
-            model: 'gpt-4',
+            model: 'gpt-4-1106-preview',
             prompt: `theme: ${inputElement.value}`,
             system: systemMessage,
         }
@@ -61,8 +68,8 @@ export default function Home() {
 
         // TODO legg inn adjektiv
         const request: OpenAIRequest = {
-            model: 'gpt-4',
-            prompt: `Replace **all** the missing adjectives with the given words: [big, delicious, sweaty]. Mark the adjectives in bold.
+            model: 'gpt-4-1106-preview',
+            prompt: `Replace **all** the missing adjectives with the given words: [wobbly, jiggly, delicious, sweaty, fluffy, cheesy]. Mark the adjectives in bold.
             Previous response: ${(result as Finished)?.response?.content}`,
             system: systemMessage,
         }
