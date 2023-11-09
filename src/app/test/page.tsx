@@ -17,7 +17,7 @@ export default function test() {
         const request: OpenAIRequest = {
             system: systemMessage,
             prompt: 'Tell me a story all about how my life got twisted turned upside down.',
-            model: 'gpt-3.5-turbo',
+            model: 'gpt-4-1106-preview',
         }
 
         // Bare sikrer at den kjører en gang i dev mode
