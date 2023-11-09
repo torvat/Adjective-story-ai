@@ -73,6 +73,10 @@ export default function Home() {
         }
     }
 
+    function formatAdjectives(text: string){
+        return { __html: text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') };
+    }
+
     return (
         <main className='flex flex-col items-center justify-between p-24'>
             <h1>Adjective Story</h1>
@@ -85,7 +89,8 @@ export default function Home() {
             <form onSubmit={handleAdjectives}>
                 <button type={'submit'}>Fill in</button>
             </form>
-            {filledResult?.loading ? <p>Please wait, filling story...</p> : <p>{filledResult?.response?.content}</p>}
+            {filledResult?.loading ? <p>Please wait, filling story...</p> : <p dangerouslySetInnerHTML={formatAdjectives(filledResult!.response!.content)}></p>
+            }
 
         </main>
     )
