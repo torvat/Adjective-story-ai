@@ -3,6 +3,12 @@ interface AdjectiveInputProps {
     adjectives: string[];
     setAdjectives: React.Dispatch<React.SetStateAction<string[]>>;
 }
+
+/**
+ * Accepts input from the user and adds them to a list of adjectives, which is displayed beneath the input.
+ * @param adjectives the list of adjectives
+ * @param setAdjectives function to set adjectives
+ */
 export default function AdjectiveInput({adjectives, setAdjectives}: AdjectiveInputProps){
 
     const [inputValue, setInputValue] = useState<string>('');

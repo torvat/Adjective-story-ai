@@ -29,6 +29,11 @@ export default function Home() {
     const [adjectives, setAdjectives] = useState<string[]>([]);
     const [filledResult, setFilledResult] = useState<APIResult>()
 
+    /**
+     * Calls the OpenAI API with the user inputted prompt to create an adjective story.
+     * Then sets the result so it can be displayed.
+     * @param event
+     */
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault()
         setResult({ loading: true })
@@ -51,6 +56,12 @@ export default function Home() {
             setResult(undefined)
         }
     }
+
+    /**
+     * Calls the OpenAI API to fill in the missing adjectives using the user generated adjective list,
+     * then sets the filledResult to the response from the API and clears the adjective list.
+     * @param event
+     */
     async function handleAdjectives(event: FormEvent<HTMLFormElement>) {
         event.preventDefault()
         setFilledResult({loading: true})
@@ -73,6 +84,10 @@ export default function Home() {
         }
     }
 
+    /**
+     * Replaces MD bold text **word** with HTML bold text <strong>word</strong>
+     * @param text Markdown formatted text to be changed to HTML.
+     */
     function formatAdjectives(text: string){
         return { __html: text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') };
     }
