@@ -1,44 +1,64 @@
 'use client'
 
 import InputField from '@/app/common/components/InputField'
-import AdjectiveInput from "@/app/common/components/AdjectiveInput";
-import { FormEvent, useState } from 'react'
+import AdjectiveInput from '@/app/common/components/AdjectiveInput'
+import { type FormEvent, useState } from 'react'
 
-const systemMessage = `
-You are a professional writer.
-You should create an adjective story based on the given prompt.
-You should write at least one paragraph with adjectives missing in several sentences.
-Where there are missing adjectives, it should be denoted only using "_______".
-You should just give the answer without any other comments.
-You should not use any number indicators like (x) next to the missing adjectives.
+const systemMessagePrompt = `
+You should create an Adjective Story based on the provided theme:
+
+    Imagine yourself as a skilled writer with the vivid imagination of an 8-year-old in the 3rd grade.
+    Your story should align with the provided theme and exclude adjectives in certain parts.
+    Instead of using adjectives, leave a blank "_______" to signify their absence.
+    Provide a narrative that flows naturally despite the omitted words.
+    Present your story directly, without additional commentary or explanation.
+    Refrain from marking omitted adjectives with any numbers or symbols.
+
+You should respond in the language of the prompt.
+
+Your input should follow the template:
+
+theme:{}
+length:{}
+words:{}
+Where
+    theme is the theme of the text.
+    length is the approximate length of the text.
+    words should be the number if adjectives that should be missing from the text.
+
+The theme, length and words should not be referenced in the response.
 `
 
 const systemMessageAdjectives = `
+You are lazy and predictable.
 You should fill in the missing adjectives denoted by "_______" using the provided adjective list.
 You should return only the filled out story without any other comments.
-You should fill the first word in the first missing adjective spot, the second word in the second spot, and so on.
-You should not try to make the adjectives make sense.
+The words should be added to the text in the same order as they are in the list.
+You should NOT include any another adjectives than the provided in the story.
 `
+type Loading = { loading: true }
+type Response = { loading: false; response: OpenAIResponse }
 
-type APIResult = { loading: true } | { loading: false; response: OpenAIResponse }
+type APIResult = Loading | Response
 
 const inputId = 'input'
 
 export default function Home() {
     const [result, setResult] = useState<APIResult>()
-    const [adjectives, setAdjectives] = useState<string[]>([]);
+    const [adjectives, setAdjectives] = useState<string[]>([])
     const [filledResult, setFilledResult] = useState<APIResult>()
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault()
         setResult({ loading: true })
+        setFilledResult(undefined)
 
         const inputElement = document.getElementById(inputId) as HTMLInputElement
 
         const request: OpenAIRequest = {
-            model: 'gpt-3.5-turbo',
+            model: 'gpt-4-1106-preview',
             prompt: inputElement.value,
-            system: systemMessage,
+            system: systemMessagePrompt,
         }
 
         const result = await fetch('api', {
@@ -51,13 +71,17 @@ export default function Home() {
             setResult(undefined)
         }
     }
+
     async function handleAdjectives(event: FormEvent<HTMLFormElement>) {
         event.preventDefault()
-        setFilledResult({loading: true})
+        setFilledResult({ loading: true })
 
         const request: OpenAIRequest = {
-            model: 'gpt-3.5-turbo',
-            prompt: 'Replace **all** the missing adjectives with the given words ' + adjectives.toString() + 'Mark the adjectives in bold. Previous respone: ' + (result as any)?.response?.content,
+            model: 'gpt-4-1106-preview',
+            prompt: `
+            Replace **all** the missing adjectives with the given words [${adjectives.join(', ')}]
+            Mark the adjectives in bold.
+            Previous respone: ${(result as Response)?.response?.content}`,
             system: systemMessageAdjectives,
         }
 
@@ -66,7 +90,7 @@ export default function Home() {
             method: 'POST',
         })
         if (resultFilled.ok) {
-            setFilledResult({loading: false, response: await resultFilled.json()})
+            setFilledResult({ loading: false, response: await resultFilled.json() })
             setAdjectives([])
         } else {
             setFilledResult(undefined)
@@ -81,12 +105,11 @@ export default function Home() {
                 <button type={'submit'}>Generate</button>
             </form>
             {result?.loading ? <p>Please wait</p> : <p>{result?.response?.content}</p>}
-            <AdjectiveInput adjectives={adjectives} setAdjectives={setAdjectives}/>
+            <AdjectiveInput adjectives={adjectives} setAdjectives={setAdjectives} />
             <form onSubmit={handleAdjectives}>
                 <button type={'submit'}>Fill in</button>
             </form>
             {filledResult?.loading ? <p>Please wait, filling story...</p> : <p>{filledResult?.response?.content}</p>}
-
         </main>
     )
 }
