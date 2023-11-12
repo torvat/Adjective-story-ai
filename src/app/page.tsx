@@ -7,8 +7,8 @@ import { FormEvent, useState } from 'react'
 const systemMessage = `
 You are a professional writer.
 You should create an adjective story based on the given prompt.
-You should write at least one paragraph with adjectives missing in several sentences.
-Where there are missing adjectives, it should be denoted only using "_______".
+You should write at least one paragraph with all adjectives missing, relpaced with "_______".
+Each noun should have an missing adjective 
 You should just give the answer without any other comments.
 You should not use any number indicators like (x) next to the missing adjectives.
 `
@@ -100,12 +100,13 @@ export default function Home() {
     return (
         <main className='flex flex-col items-center justify-between sm:p-24 p-5'>
             <h1>Adjective Story</h1>
+            <AdjectiveInput adjectives={adjectives} setAdjectives={setAdjectives} />
             <form onSubmit={handleSubmit}>
                 <InputField id={inputId} required />
                 <button type={'submit'}>Generate</button>
             </form>
-            {result?.loading ? <p>Please wait</p> : <p>{result?.response?.content}</p>}
-            <AdjectiveInput adjectives={adjectives} setAdjectives={setAdjectives} />
+            {result?.loading ? <p>Please wait</p> : <p>Fill in adjectives</p>}
+
             <form onSubmit={handleAdjectives}>
                 <button type={'submit'}>Fill in</button>
             </form>
