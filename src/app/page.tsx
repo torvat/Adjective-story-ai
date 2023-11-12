@@ -75,7 +75,7 @@ export default function Home() {
             prompt:
                 'Replace **all** the missing adjectives with the given words ' +
                 adjectives.toString() +
-                'Mark the adjectives in bold. Previous respone: ' +
+                ' Mark the adjectives in bold. Previous respone: ' +
                 (result as any)?.response?.content,
             system: systemMessageAdjectives,
         }
@@ -103,7 +103,7 @@ export default function Home() {
     }
 
     return (
-        <main className='flex flex-col items-center justify-between p-24'>
+        <main className='flex flex-col items-center justify-between sm:p-24 p-5'>
             <h1>Adjective Story</h1>
             <form onSubmit={handleSubmit}>
                 <InputField id={inputId} required placeholder='Enter aleast 1 keyword' />
