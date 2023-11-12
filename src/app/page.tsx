@@ -1,7 +1,7 @@
 'use client'
 
 import InputField from '@/app/common/components/InputField'
-import AdjectiveInput from "@/app/common/components/AdjectiveInput";
+import AdjectiveInput from '@/app/common/components/AdjectiveInput'
 import { FormEvent, useState } from 'react'
 
 const systemMessage = `
@@ -18,6 +18,7 @@ You should fill in the missing adjectives denoted by "_______" using the provide
 You should return only the filled out story without any other comments.
 You should fill the first word in the first missing adjective spot, the second word in the second spot, and so on.
 You should not try to make the adjectives make sense.
+You should not output the adjectives used.
 `
 
 type APIResult = { loading: true } | { loading: false; response: OpenAIResponse }
@@ -26,7 +27,7 @@ const inputId = 'input'
 
 export default function Home() {
     const [result, setResult] = useState<APIResult>()
-    const [adjectives, setAdjectives] = useState<string[]>([]);
+    const [adjectives, setAdjectives] = useState<string[]>([])
     const [filledResult, setFilledResult] = useState<APIResult>()
 
     /**
@@ -64,11 +65,14 @@ export default function Home() {
      */
     async function handleAdjectives(event: FormEvent<HTMLFormElement>) {
         event.preventDefault()
-        setFilledResult({loading: true})
+        setFilledResult({ loading: true })
 
         const request: OpenAIRequest = {
             model: 'gpt-4-1106-preview',
-            prompt: 'Replace **all** the missing adjectives with the given words ' + adjectives.toString() + 'Mark the adjectives in bold. Previous respone: ' + (result as any)?.response?.content,
+            prompt: `
+                Replace **all** the missing adjectives with the given words [${adjectives.toString()}].
+                Mark the adjectives in bold.
+                Previous respone: ${(result as any)?.response?.content}`,
             system: systemMessageAdjectives,
         }
 
@@ -77,7 +81,7 @@ export default function Home() {
             method: 'POST',
         })
         if (resultFilled.ok) {
-            setFilledResult({loading: false, response: await resultFilled.json()})
+            setFilledResult({ loading: false, response: await resultFilled.json() })
             setAdjectives([])
         } else {
             setFilledResult(undefined)
@@ -88,9 +92,9 @@ export default function Home() {
      * Replaces MD bold text **word** with HTML bold text <strong>word</strong>
      * @param text Markdown formatted text to be changed to HTML.
      */
-    function formatAdjectives(text: string | undefined){
-        if(text === undefined) return;
-        return { __html: text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') };
+    function formatAdjectives(text: string | undefined) {
+        if (text === undefined) return
+        return { __html: text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }
     }
 
     return (
@@ -101,13 +105,15 @@ export default function Home() {
                 <button type={'submit'}>Generate</button>
             </form>
             {result?.loading ? <p>Please wait</p> : <p>{result?.response?.content}</p>}
-            <AdjectiveInput adjectives={adjectives} setAdjectives={setAdjectives}/>
+            <AdjectiveInput adjectives={adjectives} setAdjectives={setAdjectives} />
             <form onSubmit={handleAdjectives}>
                 <button type={'submit'}>Fill in</button>
             </form>
-            {filledResult?.loading ? <p>Please wait, filling story...</p> : <p dangerouslySetInnerHTML={formatAdjectives(filledResult?.response?.content)}></p>
-            }
-
+            {filledResult?.loading ? (
+                <p>Please wait, filling story...</p>
+            ) : (
+                <p dangerouslySetInnerHTML={formatAdjectives(filledResult?.response?.content)}></p>
+            )}
         </main>
     )
 }
