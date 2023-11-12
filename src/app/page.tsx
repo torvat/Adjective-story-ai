@@ -98,7 +98,7 @@ export default function Home() {
     }
 
     return (
-        <main className='flex flex-col items-center justify-between p-24'>
+        <main className='flex flex-col items-center justify-between sm:p-24 p-5'>
             <h1>Adjective Story</h1>
             <form onSubmit={handleSubmit}>
                 <InputField id={inputId} required />
