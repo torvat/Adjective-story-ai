@@ -18,6 +18,7 @@ You should fill in the missing adjectives denoted by "_______" using the provide
 You should return only the filled out story without any other comments.
 You should fill the first word in the first missing adjective spot, the second word in the second spot, and so on.
 You should not try to make the adjectives make sense.
+You should not output the adjectives used.
 `
 
 type APIResult = { loading: true } | { loading: false; response: OpenAIResponse }
@@ -68,11 +69,10 @@ export default function Home() {
 
         const request: OpenAIRequest = {
             model: 'gpt-4-1106-preview',
-            prompt:
-                'Replace **all** the missing adjectives with the given words ' +
-                adjectives.toString() +
-                ' Mark the adjectives in bold. Previous respone: ' +
-                (result as any)?.response?.content,
+            prompt: `
+                Replace **all** the missing adjectives with the given words [${adjectives.toString()}].
+                Mark the adjectives in bold.
+                Previous respone: ${(result as any)?.response?.content}`,
             system: systemMessageAdjectives,
         }
 
