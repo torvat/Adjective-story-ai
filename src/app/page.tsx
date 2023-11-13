@@ -29,6 +29,7 @@ export default function Home() {
     const [result, setResult] = useState<APIResult>()
     const [adjectives, setAdjectives] = useState<string[]>([])
     const [filledResult, setFilledResult] = useState<APIResult>()
+    const [isHidden, setIsHidden] = useState<boolean>(true)
 
     /**
      * Calls the OpenAI API with the user inputted prompt to create an adjective story.
@@ -105,8 +106,11 @@ export default function Home() {
                 <InputField id={inputId} required />
                 <button type={'submit'}>Generate</button>
             </form>
-            {result?.loading ? <p>Please wait</p> : <p>Fill in adjectives</p>}
-
+            <button type='button' onClick={() => setIsHidden(!isHidden)}>
+                {isHidden ? 'Show generated text' : 'Hide generated text'}
+            </button>
+            {!isHidden ? result?.loading ? <p>Loading...</p> : <p>{result?.response?.content}</p> : null}
+            {result?.loading ? <p>Loading...</p> : <p>Fill in adjectives</p>}
             <form onSubmit={handleAdjectives}>
                 <button type={'submit'}>Fill in</button>
             </form>
