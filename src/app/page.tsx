@@ -108,7 +108,7 @@ export default function Home() {
             <h1>Adjective Story</h1>
             <AdjectiveInput adjectives={adjectives} setAdjectives={setAdjectives} />
             <form onSubmit={handleSubmit}>
-                <InputField id={inputId} required placeholder='Enter aleast 1 keyword' />
+                <InputField id={inputId} required placeholder='What should the story be about?' />
                 <button type={'submit'}>Generate</button>
             </form>
             <button type='button' onClick={() => setIsHidden(!isHidden)}>
