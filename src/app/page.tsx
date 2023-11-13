@@ -30,6 +30,9 @@ export default function Home() {
     const [adjectives, setAdjectives] = useState<string[]>([])
     const [filledResult, setFilledResult] = useState<APIResult>()
     const [isHidden, setIsHidden] = useState<boolean>(true)
+    const [buttonDisable, setButtonDisable] = useState<boolean>(true)
+
+    const buttonBlur: string = 'opacity-50'
 
     /**
      * Calls the OpenAI API with the user inputted prompt to create an adjective story.
@@ -54,6 +57,7 @@ export default function Home() {
         })
         if (result.ok) {
             setResult({ loading: false, response: await result.json() })
+            setButtonDisable(false)
         } else {
             setResult(undefined)
         }
@@ -84,6 +88,7 @@ export default function Home() {
         if (resultFilled.ok) {
             setFilledResult({ loading: false, response: await resultFilled.json() })
             setAdjectives([])
+            setButtonDisable(true)
         } else {
             setFilledResult(undefined)
         }
@@ -103,7 +108,7 @@ export default function Home() {
             <h1>Adjective Story</h1>
             <AdjectiveInput adjectives={adjectives} setAdjectives={setAdjectives} />
             <form onSubmit={handleSubmit}>
-                <InputField id={inputId} required />
+                <InputField id={inputId} required placeholder='What should the story be about?' />
                 <button type={'submit'}>Generate</button>
             </form>
             <button type='button' onClick={() => setIsHidden(!isHidden)}>
@@ -112,7 +117,9 @@ export default function Home() {
             {!isHidden ? result?.loading ? <p>Loading...</p> : <p>{result?.response?.content}</p> : null}
             {result?.loading ? <p>Loading...</p> : <p>Fill in adjectives</p>}
             <form onSubmit={handleAdjectives}>
-                <button type={'submit'}>Fill in</button>
+                <button type={'submit'} disabled={buttonDisable} className={buttonDisable == true ? buttonBlur : ''}>
+                    Fill in
+                </button>
             </form>
             {filledResult?.loading ? (
                 <p>Please wait, filling story...</p>
