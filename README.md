@@ -4,6 +4,10 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 DAT158 Assingment-2: Project for creating an ai to generate adjective stories.
 
+The report can be found here: [Rapport Oblig 2 ML.pdf](Rapport%20Oblig%202%20ML.pdf)
+
+The project is deployed on Vercel: [https://adjective-story-ai.vercel.app/](https://adjective-story-ai.vercel.app/)
+
 ## OpenAI API
 
 This project uses the [OpenAI API](https://beta.openai.com/docs/introduction) to generate text.
